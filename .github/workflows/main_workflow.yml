@@ -30,6 +30,9 @@ jobs:
 
     - name: Install coverage report generator
       run: dotnet tool install -g dotnet-reportgenerator-globaltool
+      
+    - name: Make coverage report
+      run: reportgenerator "-reports:Sender\BatteryDataStreamingTests\TestResults\*\*.xml" "-targetdir:coverage"
     
     - name: Create coverage artifact
       uses: actions/upload-artifact@v2
