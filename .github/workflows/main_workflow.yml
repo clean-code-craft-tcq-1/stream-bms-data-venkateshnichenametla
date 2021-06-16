@@ -46,5 +46,5 @@ jobs:
 
 
     - name: piping
-      run: dotnet run Sender\BatteryDataStreaming\BatteryDataStreaming.csproj | dotnet run Receiver/BatteryStreamReceiver/BatteryStreamReceiver.csproj
+      run: dotnet run Sender\BatteryDataStreaming\BatteryDataStreaming.csproj | dotnet run Receiver\BatteryStreamReceiver\BatteryStreamReceiver.csproj
  
