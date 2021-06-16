@@ -44,7 +44,3 @@ jobs:
         path: coverage
         retention-days: 1
 
-
-    - name: piping
-      run: dotnet run Sender\BatteryDataStreaming\BatteryDataStreaming.csproj | dotnet run Receiver\BatteryStreamReceiver\BatteryStreamReceiver.csproj
- 
