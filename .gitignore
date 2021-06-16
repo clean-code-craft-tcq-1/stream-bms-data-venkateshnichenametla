@@ -3,3 +3,9 @@
 ################################################################################
 
 /.vs
+/Sender
+/Receiver/.vs/BatteryStreamReceiver
+/Receiver/BatteryStreamReceiver/obj
+/Receiver/BatteryStreamReceiver/bin/Debug/netcoreapp3.1
+/Receiver/BatteryStreamReceiver.Test/obj
+/Receiver/BatteryStreamReceiver.Test/bin/Debug/netcoreapp3.1
