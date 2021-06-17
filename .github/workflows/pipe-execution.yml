@@ -27,5 +27,5 @@ jobs:
 
     - name: Run Projects With Pipe
       run: |
-        dotnet run --project Sender\BatteryDataStreaming\BatteryDataStreaming.csproj
+        dotnet run --project Sender\BatteryDataStreaming\BatteryDataStreaming.csproj &&
         dotnet run --project Receiver\BatteryStreamReceiver\BatteryStreamReceiver.csproj
