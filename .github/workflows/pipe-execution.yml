@@ -24,6 +24,6 @@ jobs:
         dotnet-version: 3.1.101
 
     - name: Run Projects With Pipe
-      run:  ".\Pipe.bat" 
+      run:  "Pipe.bat" 
 
   
