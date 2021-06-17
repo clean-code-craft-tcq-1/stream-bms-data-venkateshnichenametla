@@ -26,4 +26,4 @@ jobs:
         dotnet-version: 3.1.101
 
     - name: Run Projects With Pipe
-      run: dotnet run --project Sender\BatteryDataStreaming\BatteryDataStreaming.csproj 
+      run: dotnet run --project Receiver\BatteryStreamReceiver\BatteryStreamReceiver.csproj
