@@ -19,6 +19,8 @@ namespace BatteryStreamReceiver
                 {
                     BatteryParameters batteryParameterValues = new BatteryParameters();
                     readingInput = streamInput[i];
+                    Console.WriteLine(readingInput.Split(";")[0]);
+                    Console.WriteLine(readingInput.Split(";")[1]);
                     temperatureValue = readingInput.Split(";")[0];
                     socValue = readingInput.Split(";")[1];
                     batteryParameterValues.temperature = ParseInputValue(temperatureValue);
