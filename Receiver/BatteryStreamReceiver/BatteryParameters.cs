@@ -6,7 +6,7 @@ namespace BatteryStreamReceiver
 {
     public class BatteryParameters
     {
-        public double temperature { get; set; }
-        public double stateOfCharge { get; set; }
+        public double Temperature { get; set; }
+        public double StateOfCharge { get; set; }
     }
 }

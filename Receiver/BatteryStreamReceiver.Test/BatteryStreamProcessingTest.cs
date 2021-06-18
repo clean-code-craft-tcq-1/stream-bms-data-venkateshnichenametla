@@ -6,30 +6,31 @@ namespace BatteryStreamReceiver.Test
 {
     public class BatteryStreamProcessingTest
     {
-        private readonly IStreamInputParser streamParser = new StreamingInputParser();
+        BatteryStatastics batteryStatastics;
+        private readonly IStreamInputParser streamParser = new StreamingInputParser();        
         List<string> batteryStreamData = new List<string>() { "27; 33", "2; 24", "6; 45", "26; 51", "30; 26" };
         public List<BatteryParameters> ExpectedList()
         {
             List<BatteryParameters> expectedBatteryParameters = new List<BatteryParameters>();
             BatteryParameters batteryParameter = new BatteryParameters();
-            batteryParameter.temperature = 27;
-            batteryParameter.stateOfCharge = 33;            
+            batteryParameter.Temperature = 27;
+            batteryParameter.StateOfCharge = 33;
             expectedBatteryParameters.Add(batteryParameter);
             batteryParameter = new BatteryParameters();
-            batteryParameter.temperature = 2;
-            batteryParameter.stateOfCharge = 24;
+            batteryParameter.Temperature = 2;
+            batteryParameter.StateOfCharge = 24;
             expectedBatteryParameters.Add(batteryParameter);
             batteryParameter = new BatteryParameters();
-            batteryParameter.temperature = 6;
-            batteryParameter.stateOfCharge = 45;
+            batteryParameter.Temperature = 6;
+            batteryParameter.StateOfCharge = 45;
             expectedBatteryParameters.Add(batteryParameter);
             batteryParameter = new BatteryParameters();
-            batteryParameter.temperature = 26;
-            batteryParameter.stateOfCharge = 51;
+            batteryParameter.Temperature = 26;
+            batteryParameter.StateOfCharge = 51;
             expectedBatteryParameters.Add(batteryParameter);
             batteryParameter = new BatteryParameters();
-            batteryParameter.temperature = 30;
-            batteryParameter.stateOfCharge = 26;
+            batteryParameter.Temperature = 30;
+            batteryParameter.StateOfCharge = 26;
             expectedBatteryParameters.Add(batteryParameter);
             return expectedBatteryParameters;
         }
@@ -53,61 +54,33 @@ namespace BatteryStreamReceiver.Test
         public void GivenBatteryParameterReadings_WhenBatteryParameterListIsValid_ThenReturnMaximumBatteryParameters()
         {
             BatteryStreamProcessing batteryStreamProcessing = new BatteryStreamProcessing(streamParser);
-            List<BatteryParameters> expectedBatteryParameters = ExpectedList();
-            BatteryParameters batteryParameters = new BatteryParameters();
-            batteryParameters = batteryStreamProcessing.CalculateMaximumParametersReading(expectedBatteryParameters);
-            BatteryParameters maximumBatteryDetails = new BatteryParameters();
-            maximumBatteryDetails.temperature = 30;
-            maximumBatteryDetails.stateOfCharge = 51;
-            Assert.Equal(maximumBatteryDetails.temperature, batteryParameters.temperature);
+            string inputStream = "10;23";
+            batteryStatastics = batteryStreamProcessing.CalculateMaximumandMinimumParametersReading(inputStream);            
+            Assert.Equal(10,batteryStatastics.TemperatureStatastics.MinimumTemperatureReading);
         }
         [Fact]
         public void GivenBatteryParameterReadings_WhenBatteryParameterListIsNull_ThenReturnMaximumBatteryParametersAsNull()
-        {
+        {   
             BatteryStreamProcessing batteryStreamProcessing = new BatteryStreamProcessing(streamParser);
-            List<BatteryParameters> batteryParameters = null;
-            BatteryParameters maximumBatteryDetails = new BatteryParameters();
-            maximumBatteryDetails = batteryStreamProcessing.CalculateMaximumParametersReading(batteryParameters);
-            Assert.Null(maximumBatteryDetails);
+            string inputStream = "";
+            batteryStatastics = batteryStreamProcessing.CalculateMaximumandMinimumParametersReading(inputStream);
+            Assert.Equal(double.MaxValue,batteryStatastics.TemperatureStatastics.MinimumTemperatureReading);
         }
         [Fact]
         public void GivenBatteryParameterReadings_WhenBatteryParameterListIsValid_ThenReturnAverageBatteryParameters()
         {
             BatteryStreamProcessing batteryStreamProcessing = new BatteryStreamProcessing(streamParser);
-            List<BatteryParameters> expectedBatteryParameters = ExpectedList();
-            BatteryParameters averagebatteryParameters = new BatteryParameters();
-            averagebatteryParameters = batteryStreamProcessing.CalculateAverageParametersReadings(expectedBatteryParameters);
-            BatteryParameters expectedAverageBatteryDetails = new BatteryParameters();
-            expectedAverageBatteryDetails.temperature = 18.2;
-            expectedAverageBatteryDetails.stateOfCharge = 35.8;
-            Assert.Equal(expectedAverageBatteryDetails.temperature, averagebatteryParameters.temperature);
+            batteryStatastics = batteryStreamProcessing.CalculateAverageParametersReadings(batteryStreamData);
+            Assert.Equal(18.2, batteryStatastics.TemperatureStatastics.TemperatureAverage);
         }
         [Fact]
         public void GivenBatteryParameterReadings_WhenBatteryParameterListIsNull_ThenReturnAverageBatteryParametersAsNull()
         {
             BatteryStreamProcessing batteryStreamProcessing = new BatteryStreamProcessing(streamParser);
-            List<BatteryParameters> batteryParameters = null;
-            BatteryParameters averagebatteryParameters = new BatteryParameters();
-            averagebatteryParameters = batteryStreamProcessing.CalculateAverageParametersReadings(batteryParameters);
-            BatteryParameters expectedAverageBatteryDetails = new BatteryParameters();            
-            Assert.Null(averagebatteryParameters);
+            List<string> batteryParameters = null;
+            batteryStatastics = batteryStreamProcessing.CalculateAverageParametersReadings(batteryParameters);        
+            Assert.Equal(0,batteryStatastics.TemperatureStatastics.TemperatureAverage);
         }
-        [Fact]
-        public void GivenStreamingInoutList_WhenListIsValid_ThenReturnStringWithMaximunAndAverageResult()
-        {
-            BatteryStreamProcessing batteryStreamProcessing = new BatteryStreamProcessing(streamParser);
-            string resultData = string.Empty;
-            resultData = batteryStreamProcessing.ProcessBatteryStreamingData(batteryStreamData);
-            Assert.NotNull(resultData);
-        }
-        [Fact]
-        public void GivenStreamingInoutList_WhenListIsNull_ThenReturnNull()
-        {
-            List<string> streamData = null;
-            BatteryStreamProcessing batteryStreamProcessing = new BatteryStreamProcessing(streamParser);
-            string resultData = string.Empty;
-            resultData = batteryStreamProcessing.ProcessBatteryStreamingData(streamData);
-            Assert.Null(resultData);
-        }
+        
     }
 }

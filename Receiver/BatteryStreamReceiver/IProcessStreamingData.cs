@@ -6,8 +6,7 @@ namespace BatteryStreamReceiver
 {
     public interface IProcessStreamingData
     {
-        public string ProcessBatteryStreamingData(List<string> streamData);
-        public BatteryParameters CalculateMaximumParametersReading(List<BatteryParameters> batteryParameters);
-        public BatteryParameters CalculateAverageParametersReadings(List<BatteryParameters> batteryParameters);
+        public BatteryStatastics CalculateMaximumandMinimumParametersReading(string batteryParametersInput);
+        public BatteryStatastics CalculateAverageParametersReadings(List<string> batteryStreamingInput);
     }
 }

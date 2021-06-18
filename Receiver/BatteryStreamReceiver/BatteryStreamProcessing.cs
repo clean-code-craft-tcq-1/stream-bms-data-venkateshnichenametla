@@ -7,91 +7,56 @@ namespace BatteryStreamReceiver
 {
     public class BatteryStreamProcessing : IProcessStreamingData
     {
-        IStreamInputParser _streamInputParser;
+        private BatteryStatastics batteryStatastics;
+        private IStreamInputParser _streamInputParser;
         public BatteryStreamProcessing(IStreamInputParser streamInputParser)
         {
             _streamInputParser = streamInputParser;
-        }
+            batteryStatastics = new BatteryStatastics();
 
-        public BatteryParameters CalculateAverageParametersReadings(List<BatteryParameters> batteryParameters)
+        }
+        public BatteryStatastics CalculateAverageParametersReadings(List<string> batteryStreamingData)
         {
-            BatteryParameters averageParametersReading = new BatteryParameters();
+            List<BatteryParameters> batteryParameters = new List<BatteryParameters>();
+            batteryParameters = _streamInputParser.GetBatteryParametersFromStreamingData(batteryStreamingData);            
             if (ListValidator.IsBatteryParameterListValid(batteryParameters))
             {
-                double sumTemperatureValue = 0, sumStateOfChargeValue = 0, averageTemperature = 0, averageStateOfCharge = 0;
-                
+                double sumTemperatureValue = 0, sumStateOfChargeValue = 0, averageTemperature = 0, averageStateOfCharge = 0;                
                 for (int i = 0; i < batteryParameters.Count(); i++)
                 {
-                    sumTemperatureValue += batteryParameters[i].temperature;
-                    sumStateOfChargeValue += batteryParameters[i].stateOfCharge;
+                    sumTemperatureValue += batteryParameters[i].Temperature;
+                    sumStateOfChargeValue += batteryParameters[i].StateOfCharge;
                 }
                 averageTemperature = sumTemperatureValue / batteryParameters.Count();
                 averageStateOfCharge = sumStateOfChargeValue / batteryParameters.Count();
-                averageParametersReading.temperature = averageTemperature;
-                averageParametersReading.stateOfCharge = averageStateOfCharge;
-                
+                batteryStatastics.TemperatureStatastics.TemperatureAverage = averageTemperature;
+                batteryStatastics.SOCStatastics.SOCAverage = averageStateOfCharge;                
             }
             else
             {
-                averageParametersReading = null;
+                batteryStatastics.TemperatureStatastics.TemperatureAverage = 0;
+                batteryStatastics.SOCStatastics.SOCAverage = 0;
             }
-            return averageParametersReading;
+            return batteryStatastics;
         }
 
-        public BatteryParameters CalculateMaximumParametersReading(List<BatteryParameters> batteryParameters)
+        public BatteryStatastics CalculateMaximumandMinimumParametersReading(string inputParameters)
         {
-            BatteryParameters maximumParametersReading = new BatteryParameters();
-            if (ListValidator.IsBatteryParameterListValid(batteryParameters))
+            if (!string.IsNullOrEmpty(inputParameters))
             {
-                double maxTemperatureValue = 0;
-                double maxStateOfChargeValue = 0;                
-                for (int i = 0; i < batteryParameters.Count(); i++)
-                {
-                    if (batteryParameters[i].temperature > maxTemperatureValue)
-                    {
-                        maxTemperatureValue = batteryParameters[i].temperature;
-                    }
-                    if (batteryParameters[i].stateOfCharge > maxStateOfChargeValue)
-                    {
-                        maxStateOfChargeValue = batteryParameters[i].stateOfCharge;
-                    }
-                }
-                maximumParametersReading.temperature = maxTemperatureValue;
-                maximumParametersReading.stateOfCharge = maxStateOfChargeValue;
+                List<BatteryParameters> batteryParameters = _streamInputParser.GetBatteryParametersFromStreamingData(new List<string>() { inputParameters });
+                batteryStatastics.TemperatureStatastics.MinimumTemperatureReading = Math.Min(batteryStatastics.TemperatureStatastics.MinimumTemperatureReading, batteryParameters[0].Temperature);
+                batteryStatastics.SOCStatastics.MinimumSOCReading = Math.Min(batteryStatastics.SOCStatastics.MinimumSOCReading, batteryParameters[0].StateOfCharge);
+                batteryStatastics.TemperatureStatastics.MaximumTemperatureReading = Math.Max(batteryStatastics.TemperatureStatastics.MaximumTemperatureReading, batteryParameters[0].Temperature);
+                batteryStatastics.SOCStatastics.MaximumSOCReading = Math.Max(batteryStatastics.SOCStatastics.MaximumSOCReading, batteryParameters[0].StateOfCharge);
+                return batteryStatastics;
             }
             else
             {
-                maximumParametersReading = null;
+                return batteryStatastics;
             }
-            return maximumParametersReading;
-        }
+        }       
 
-        public string ProcessBatteryStreamingData(List<string> streamData)
-        {
-            if (ListValidator.IsBatteryStreamingInputListValid(streamData))
-            {
-                List<BatteryParameters> batteryParameters = new List<BatteryParameters>();
-                BatteryParameters maximumBatteryReadings = new BatteryParameters();
-                BatteryParameters averageBatteryReadings = new BatteryParameters();
-                batteryParameters = _streamInputParser.GetBatteryParametersFromStreamingData(streamData);
-                maximumBatteryReadings = CalculateMaximumParametersReading(batteryParameters);
-                averageBatteryReadings = CalculateAverageParametersReadings(batteryParameters);
-                return DisplayData(maximumBatteryReadings, averageBatteryReadings);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public string DisplayData(BatteryParameters maximumBatteryReadings,BatteryParameters averageBatteryReadings)
-        {
-            string displayResult = string.Empty;
-            displayResult="Maximum Temperature - "+maximumBatteryReadings.temperature+" & Maximum State Of Charge - " + maximumBatteryReadings.stateOfCharge;
-            displayResult += "\nAverage Temperature - " + averageBatteryReadings.temperature + " & Average State Of Charge - " + averageBatteryReadings.stateOfCharge;
-
-            return displayResult;
-        }
        
     }
 }
