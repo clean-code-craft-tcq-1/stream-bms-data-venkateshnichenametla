@@ -25,14 +25,17 @@ jobs:
       with:
         dotnet-version: 3.1.101
 
-    - name: Run tests and collect coverage
+    - name: Run tests and collect coverage Sender
       run: dotnet test Sender\BatteryDataStreamingTests\BatteryDataStreamingTests.csproj --collect:"XPlat Code Coverage"
-
+    - name: Run tests and collect coverage Receiver
+      run: dotnet test Receiver\BatteryStreamReceiver.Test\BatteryStreamReceiver.Test.csproj --collect:"XPlat Code Coverage"
     - name: Install coverage report generator
       run: dotnet tool install -g dotnet-reportgenerator-globaltool
       
-    - name: Make coverage report
+    - name: Make coverage report-Sender
       run: reportgenerator "-reports:Sender\BatteryDataStreamingTests\TestResults\*\*.xml" "-targetdir:coverage"
+    - name: Make coverage report-Receiver 
+      run: reportgenerator "-reports:Receiver\BatteryStreamReceiver.Test\TestResults\*\*.xml" "-targetdir:coverage"
     
     - name: Create coverage artifact
       uses: actions/upload-artifact@v2
@@ -40,3 +43,4 @@ jobs:
         name: coverage
         path: coverage
         retention-days: 1
+
