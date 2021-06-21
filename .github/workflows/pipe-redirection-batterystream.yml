@@ -3,9 +3,9 @@ name: pipe-redirection
 on: [push, pull_request]
 
 jobs:
-
+  
   build:
-
+    
     strategy:
       matrix:
         configuration: [Debug]
@@ -34,4 +34,5 @@ jobs:
     # Run the app
     - name: Run the App
       shell: cmd
+      timeout-minutes: 5
       run: call run.bat
