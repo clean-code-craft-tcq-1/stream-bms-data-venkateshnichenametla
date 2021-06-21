@@ -29,5 +29,5 @@ jobs:
     # Run the app
     - name: Run the App
       shell: cmd  
-      timeout-minutes: 2
+      timeout-minutes: 4
       run: call run.bat
