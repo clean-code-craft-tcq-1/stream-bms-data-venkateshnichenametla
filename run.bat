@@ -1,5 +1,5 @@
 pushd "%~dp0"
 
-BatteryDataStreaming.exe | BatteryStreamReceiver.exe
+dotnet run --project Sender\BatteryDataStreaming\BatteryDataStreaming.exe | dotnet run --project Receiver\BatteryStreamReceiverBatteryStreamReceiver.exe
 
 popd
