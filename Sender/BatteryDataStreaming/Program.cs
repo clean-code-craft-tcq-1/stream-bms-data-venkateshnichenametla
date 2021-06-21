@@ -33,8 +33,7 @@ namespace BatteryDataStreaming
                 string data = batteryDataStreaming.GetBatteryData(streamingCounter);
                 if (data.Equals("--End--"))
                 {
-                    streamingCounter = 1;
-                    continue;
+                   break;
                 }
                 Console.WriteLine(data);
                 Thread.Sleep(2000);
