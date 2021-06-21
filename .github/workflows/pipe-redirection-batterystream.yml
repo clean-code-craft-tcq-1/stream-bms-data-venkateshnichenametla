@@ -27,9 +27,9 @@ jobs:
 
 
     # Restore paages, MSBUild the app, run the app
-    - name: Build the App
-      shell: cmd
-      run: call build.bat 
+    #- name: Build the App
+    #  shell: cmd
+    #  run: call build.bat 
 
     # Run the app
     - name: Run the App
